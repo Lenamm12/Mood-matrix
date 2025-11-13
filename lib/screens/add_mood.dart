@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:mood_matrix/database/database_helper.dart';
+import 'package:mood_matrix/models/entry.dart';
 
 enum MoodQuadrant {
   highEnergyUnpleasant,
@@ -64,16 +65,12 @@ class _AddMoodState extends State<AddMood> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text('Add your mood')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            const SizedBox(height: 20),
-            Text(
-              'Select your mood:',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
             const SizedBox(height: 10),
             Container(
               width: 350,
@@ -216,6 +213,9 @@ class _AddMoodState extends State<AddMood> {
                 borderRadius: BorderRadius.circular(12.0),
               ),
               child: TextField(
+                onChanged: (value) {
+                  moodNotes = value;
+                },
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12.0),
@@ -258,20 +258,24 @@ class _AddMoodState extends State<AddMood> {
     }
 
     try {
-      await DatabaseHelper.instance.insertEntry({
-        'date': DateTime.now(),
-        'notes': moodNotes,
-      });
+      final newEntry = Entry(
+          date: DateTime.now().toIso8601String(),
+          mood: selectedMood!.toString().split('.').last,
+          notes: moodNotes);
+      await DatabaseHelper.instance.insertEntry(
+        newEntry,
+      );
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Mood saved successfully!')));
     } catch (e) {
       ScaffoldMessenger.of(
         context,
-      ).showSnackBar(SnackBar(content: Text('Error saving routine: $e')));
+      ).showSnackBar(SnackBar(content: Text('Error saving mood: $e')));
     }
     setState(() {
       selectedMood = null;
+      selectedMoodQuadrant = null;
       moodNotes = null;
     });
   }
@@ -367,37 +371,35 @@ class MoodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: double.infinity,
-          height: double.infinity,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8.0),
-            color:
-                quadrant == MoodQuadrant.highEnergyUnpleasant
-                    ? (isSelected ? Colors.red.shade300 : Colors.red.shade200)
-                    : quadrant == MoodQuadrant.highEnergyPleasant
-                    ? (isSelected
-                        ? Colors.yellow.shade300
-                        : Colors.yellow.shade200)
-                    : quadrant == MoodQuadrant.lowEnergyUnpleasant
-                    ? (isSelected ? Colors.blue.shade300 : Colors.blue.shade200)
-                    : quadrant == MoodQuadrant.lowEnergyPleasant
-                    ? (isSelected
-                        ? Colors.green.shade300
-                        : Colors.green.shade200)
-                    : Colors.transparent,
-          ),
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                label,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 12),
-              ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8.0),
+          color:
+              quadrant == MoodQuadrant.highEnergyUnpleasant
+                  ? (isSelected ? Colors.red.shade300 : Colors.red.shade200)
+                  : quadrant == MoodQuadrant.highEnergyPleasant
+                  ? (isSelected
+                      ? Colors.yellow.shade300
+                      : Colors.yellow.shade200)
+                  : quadrant == MoodQuadrant.lowEnergyUnpleasant
+                  ? (isSelected ? Colors.blue.shade300 : Colors.blue.shade200)
+                  : quadrant == MoodQuadrant.lowEnergyPleasant
+                  ? (isSelected
+                      ? Colors.green.shade300
+                      : Colors.green.shade200)
+                  : Colors.transparent,
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 12, color: Colors.black),
             ),
           ),
         ),

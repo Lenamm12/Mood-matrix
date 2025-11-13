@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+import '../models/entry.dart';
+
 class DatabaseHelper {
   static final DatabaseHelper _instance = DatabaseHelper._();
   static Database? _database;
@@ -26,7 +28,7 @@ class DatabaseHelper {
   Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE IF NOT EXISTS entries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id TEXT PRIMARY KEY,
         date TEXT,
         mood TEXT,
         notes TEXT
@@ -34,10 +36,22 @@ class DatabaseHelper {
     ''');
   }
 
-  // You can add methods for updating data as well
   static DatabaseHelper get instance => _instance;
 
-  Future getEntries() async {}
+  Future<List<Entry>> getEntries() async {
+    final db = await instance.database;
+    final List<Map<String, dynamic>> maps = await db.query('entries', orderBy: 'date DESC');
+    return List.generate(maps.length, (i) {
+      return Entry.fromMap(maps[i]);
+    });
+  }
 
-  Future<void> insertEntry(Map<String, Object?> map) async {}
+  Future<void> insertEntry(Entry entry) async {
+    final db = await instance.database;
+    await db.insert(
+      'entries',
+      entry.toMap(),
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+  }
 }

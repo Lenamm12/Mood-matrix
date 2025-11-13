@@ -14,6 +14,15 @@ class Entry {
     return {'id': id, 'date': date, 'mood': mood, 'notes': notes};
   }
 
+  static Entry fromMap(Map<String, dynamic> map) {
+    return Entry(
+      id: map['id'].toString(),
+      date: map['date'],
+      mood: map['mood'],
+      notes: map['notes'],
+    );
+  }
+
   static Entry fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     final data = doc.data()!;
     return Entry(
