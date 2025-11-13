@@ -1,7 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:flutter/material.dart';
-import '/services/firebase_service.dart';
+import 'package:mood_matrix/database/database_helper.dart';
 
 enum MoodQuadrant {
   highEnergyUnpleasant,
@@ -69,6 +69,7 @@ class _AddMoodState extends State<AddMood> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
+            const SizedBox(height: 20),
             Text(
               'Select your mood:',
               style: Theme.of(context).textTheme.headlineSmall,
@@ -107,10 +108,6 @@ class _AddMoodState extends State<AddMood> {
                                         child: Center(
                                           child: Text(
                                             'High Energy, Unpleasant',
-                                            style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                              fontWeight: FontWeight.w800,
-                                            ),
                                           ),
                                         ),
                                       ),
@@ -135,12 +132,7 @@ class _AddMoodState extends State<AddMood> {
                                           ),
                                         ),
                                         child: const Center(
-                                          child: Text(
-                                            'High Energy, Pleasant',
-                                            style: TextStyle(
-                                              fontStyle: FontStyle.italic,
-                                            ),
-                                          ),
+                                          child: Text('High Energy, Pleasant'),
                                         ),
                                       ),
                                     ),
@@ -170,12 +162,7 @@ class _AddMoodState extends State<AddMood> {
                                           ),
                                         ),
                                         child: const Center(
-                                          child: Text(
-                                            'Low Energy, Unpleasant',
-                                            style: TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                            ),
-                                          ),
+                                          child: Text('Low Energy, Unpleasant'),
                                         ),
                                       ),
                                     ),
@@ -224,7 +211,7 @@ class _AddMoodState extends State<AddMood> {
             // Textfield
             Container(
               width: 350,
-              height: 100,
+              height: 50,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
               ),
@@ -261,7 +248,6 @@ class _AddMoodState extends State<AddMood> {
       selectedMood = p1;
     });
   }
-  final FirestoreService _auth = FirestoreService();
 
   Future<void> saveMood() async {
     if (selectedMood == null) {
@@ -270,15 +256,12 @@ class _AddMoodState extends State<AddMood> {
       ).showSnackBar(const SnackBar(content: Text('Please select a mood.')));
       return;
     }
-    if (moodNotes == null) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Please enter some notes.')));
-      return;
-    }
 
     try {
-      await _auth.addData("mood", {'date': DateTime.now(), 'notes': moodNotes});
+      await DatabaseHelper.instance.insertEntry({
+        'date': DateTime.now(),
+        'notes': moodNotes,
+      });
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Mood saved successfully!')));
