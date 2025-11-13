@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'add_mood.dart';
+import 'screens/add_mood.dart';
 
 void main() {
   runApp(const MyApp());

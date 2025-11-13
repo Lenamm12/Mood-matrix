@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "417641703736",
+    "project_id": "mood-matrix-173ae",
+    "storage_bucket": "mood-matrix-173ae.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417641703736:android:08cb0a18bf12265e8eb9cd",
+        "android_client_info": {
+          "package_name": "de.lenazeise.moodmatrix"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiCWO5pt5iW693ss-lgHAObSIlYBqsqNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
