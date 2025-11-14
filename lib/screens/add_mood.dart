@@ -105,6 +105,12 @@ class _AddMoodState extends State<AddMood> {
                                         child: Center(
                                           child: Text(
                                             'High Energy, Unpleasant',
+                                            style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
                                           ),
                                         ),
                                       ),
@@ -129,7 +135,15 @@ class _AddMoodState extends State<AddMood> {
                                           ),
                                         ),
                                         child: const Center(
-                                          child: Text('High Energy, Pleasant'),
+                                          child: Text(
+                                            'High Energy, Pleasant',
+                                            style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -159,7 +173,15 @@ class _AddMoodState extends State<AddMood> {
                                           ),
                                         ),
                                         child: const Center(
-                                          child: Text('Low Energy, Unpleasant'),
+                                          child: Text(
+                                            'Low Energy, Unpleasant',
+                                            style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -183,7 +205,15 @@ class _AddMoodState extends State<AddMood> {
                                           ),
                                         ),
                                         child: const Center(
-                                          child: Text('Low Energy, Pleasant'),
+                                          child: Text(
+                                            'Low Energy, Pleasant',
+                                            style: TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
@@ -259,12 +289,11 @@ class _AddMoodState extends State<AddMood> {
 
     try {
       final newEntry = Entry(
-          date: DateTime.now().toIso8601String(),
-          mood: selectedMood!.toString().split('.').last,
-          notes: moodNotes);
-      await DatabaseHelper.instance.insertEntry(
-        newEntry,
+        date: DateTime.now().toIso8601String(),
+        mood: selectedMood!.toString().split('.').last,
+        notes: moodNotes,
       );
+      await DatabaseHelper.instance.insertEntry(newEntry);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Mood saved successfully!')));
@@ -388,9 +417,7 @@ class MoodWidget extends StatelessWidget {
                   : quadrant == MoodQuadrant.lowEnergyUnpleasant
                   ? (isSelected ? Colors.blue.shade300 : Colors.blue.shade200)
                   : quadrant == MoodQuadrant.lowEnergyPleasant
-                  ? (isSelected
-                      ? Colors.green.shade300
-                      : Colors.green.shade200)
+                  ? (isSelected ? Colors.green.shade300 : Colors.green.shade200)
                   : Colors.transparent,
         ),
         child: Center(

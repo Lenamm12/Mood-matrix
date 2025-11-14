@@ -1,26 +1,53 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../models/entry.dart';
-import '../database/database_helper.dart'; // Import DatabaseHelper
+import '../database/database_helper.dart';
 
-int getDaysInMonth(int year, int month) {
-  if (month == DateTime.february) {
-    return isLeapYear(year) ? 29 : 28;
-  } else if (month == DateTime.april ||
-      month == DateTime.june ||
-      month == DateTime.september ||
-      month == DateTime.november) {
-    return 30;
-  } else {
-    return 31;
-  }
+enum MoodQuadrant {
+  highEnergyUnpleasant,
+  highEnergyPleasant,
+  lowEnergyUnpleasant,
+  lowEnergyPleasant,
 }
 
-// Helper function to check for leap year
-bool isLeapYear(int year) {
-  return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
+enum Mood {
+  Enraged,
+  Stressed,
+  Shocked,
+  Surprised,
+  Festive,
+  Ecstatic,
+  Fuming,
+  Angry,
+  Restless,
+  Energized,
+  Optimistic,
+  Excited,
+  Repulsed,
+  Worried,
+  Uneasy,
+  Pleasant,
+  Hopeful,
+  Blissful,
+  Disgusted,
+  Down,
+  Apathetic,
+  Ease,
+  Content,
+  Fulfilled,
+  Miserable,
+  Lonely,
+  Tired,
+  Relaxed,
+  Restful,
+  Balanced,
+  Despair,
+  Desolate,
+  Drained,
+  Sleepy,
+  Tranquil,
+  Serene,
 }
 
 class CalendarScreen extends StatefulWidget {
@@ -32,7 +59,7 @@ class CalendarScreen extends StatefulWidget {
 
 class _CalendarScreenState extends State<CalendarScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final DatabaseHelper _dbHelper = DatabaseHelper.instance;
 
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
@@ -47,37 +74,63 @@ class _CalendarScreenState extends State<CalendarScreen> {
   void initState() {
     super.initState();
     _selectedDay = _focusedDay;
-    _loadEntries();
+    if (currentUser != null) {
+      _dbHelper.syncFromFirestore(currentUser!); // Start listening to Firestore
+    }
+    _dbHelper.entriesStream.listen((entries) {
+      final Map<DateTime, List<Entry>> newEntries = {};
+      for (var entry in entries) {
+        final date = DateTime.parse(entry.date).toLocal();
+        final day = DateTime(date.year, date.month, date.day);
+        if (newEntries[day] == null) {
+          newEntries[day] = [];
+        }
+        newEntries[day]!.add(entry);
+      }
+      if (mounted) {
+        setState(() {
+          _entries = newEntries;
+          if(_selectedDay != null){
+              _selectedEntries = _getEntriesForDay(_selectedDay!);
+          }
+        });
+      }
+    });
+    _dbHelper.getEntries();
   }
 
-  void _loadEntries() {
-    if (currentUser == null) return;
-
-    _firestore
-        .collection('users')
-        .doc(currentUser!.uid)
-        .collection('entries')
-        .snapshots()
-        .listen((snapshot) {
-          final Map<DateTime, List<Entry>> entries = {};
-          for (var doc in snapshot.docs) {
-            final entry = Entry.fromFirestore(doc);
-            final date = DateTime.parse(entry.date).toLocal();
-            final day = DateTime(date.year, date.month, date.day);
-            if (entries[day] == null) {
-              entries[day] = [];
-            }
-            entries[day]!.add(entry);
-          }
-          setState(() {
-            _entries = entries;
-            _selectedEntries = _getEntriesForDay(_selectedDay!);
-          });
-        });
+  @override
+  void dispose() {
+    _dbHelper.dispose();
+    super.dispose();
   }
 
   List<Entry> _getEntriesForDay(DateTime day) {
-    return _entries[DateTime(day.year, day.month, day.day)] ?? [];
+    final normalizedDay = DateTime(day.year, day.month, day.day);
+    return _entries[normalizedDay] ?? [];
+  }
+
+  Color _getMoodColor(String mood) {
+    final moodIndex = Mood.values.indexWhere((m) => m.toString().split('.').last == mood);
+    if (moodIndex == -1) {
+      return Colors.grey; // Default color if mood not found
+    }
+
+    final qIndex = (moodIndex ~/ 6 < 3 ? 0 : 2) + (moodIndex % 6 < 3 ? 0 : 1);
+    final quadrant = MoodQuadrant.values[qIndex];
+
+    switch (quadrant) {
+      case MoodQuadrant.highEnergyUnpleasant:
+        return Colors.red.shade200;
+      case MoodQuadrant.highEnergyPleasant:
+        return Colors.yellow.shade200;
+      case MoodQuadrant.lowEnergyUnpleasant:
+        return Colors.blue.shade200;
+      case MoodQuadrant.lowEnergyPleasant:
+        return Colors.green.shade200;
+      default:
+        return Colors.grey;
+    }
   }
 
   @override
@@ -91,9 +144,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
             lastDay: DateTime.utc(2030, 12, 31),
             focusedDay: _focusedDay,
             calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
+            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             onDaySelected: (selectedDay, focusedDay) {
               if (!isSameDay(_selectedDay, selectedDay)) {
                 setState(() {
@@ -116,6 +167,32 @@ class _CalendarScreenState extends State<CalendarScreen> {
             eventLoader: (day) {
               return _getEntriesForDay(day);
             },
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, date, events) {
+                if (events.isNotEmpty) {
+                  return Positioned(
+                    right: 1,
+                    bottom: 1,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: events.map((event) {
+                        final entry = event as Entry;
+                        return Container(
+                          width: 7.0,
+                          height: 7.0,
+                          margin: const EdgeInsets.symmetric(horizontal: 1.5),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: _getMoodColor(entry.mood),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  );
+                }
+                return null;
+              },
+            ),
           ),
           const SizedBox(height: 8.0),
           Expanded(child: _buildEntriesList()),
