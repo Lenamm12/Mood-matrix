@@ -1,8 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../models/entry.dart';
 import '../database/database_helper.dart';
+import '../models/theme_notifier.dart';
 
 enum MoodQuadrant {
   highEnergyUnpleasant,
@@ -110,7 +112,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return _entries[normalizedDay] ?? [];
   }
 
-  Color _getMoodColor(String mood) {
+  Color getMoodColor(String mood, BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
     final moodIndex = Mood.values.indexWhere((m) => m.toString().split('.').last == mood);
     if (moodIndex == -1) {
       return Colors.grey; // Default color if mood not found
@@ -119,22 +122,35 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final qIndex = (moodIndex ~/ 6 < 3 ? 0 : 2) + (moodIndex % 6 < 3 ? 0 : 1);
     final quadrant = MoodQuadrant.values[qIndex];
 
-    switch (quadrant) {
-      case MoodQuadrant.highEnergyUnpleasant:
-        return Colors.red.shade200;
-      case MoodQuadrant.highEnergyPleasant:
-        return Colors.yellow.shade200;
-      case MoodQuadrant.lowEnergyUnpleasant:
-        return Colors.blue.shade200;
-      case MoodQuadrant.lowEnergyPleasant:
-        return Colors.green.shade200;
-      default:
-        return Colors.grey;
+    if(themeNotifier.isDarkMode) {
+      switch (quadrant) {
+        case MoodQuadrant.highEnergyUnpleasant:
+          return Colors.red.shade400;
+        case MoodQuadrant.highEnergyPleasant:
+          return Colors.yellow.shade400;
+        case MoodQuadrant.lowEnergyUnpleasant:
+          return Colors.blue.shade400;
+        case MoodQuadrant.lowEnergyPleasant:
+          return Colors.green.shade400;
+      }
+    }
+    else{
+      switch (quadrant) {
+        case MoodQuadrant.highEnergyUnpleasant:
+          return Colors.red.shade200;
+        case MoodQuadrant.highEnergyPleasant:
+          return Colors.yellow.shade200;
+        case MoodQuadrant.lowEnergyUnpleasant:
+          return Colors.blue.shade200;
+        case MoodQuadrant.lowEnergyPleasant:
+          return Colors.green.shade200;
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
       appBar: AppBar(title: const Text('Calendar')),
       body: Column(
@@ -171,11 +187,11 @@ class _CalendarScreenState extends State<CalendarScreen> {
               markerBuilder: (context, date, events) {
                 if (events.isNotEmpty) {
                   return Positioned(
-                    right: 1,
+                    left: 1,
                     bottom: 1,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: events.map((event) {
+                      children: events.reversed.map((event) {
                         final entry = event as Entry;
                         return Container(
                           width: 7.0,
@@ -183,7 +199,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           margin: const EdgeInsets.symmetric(horizontal: 1.5),
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: _getMoodColor(entry.mood),
+                            color: getMoodColor(entry.mood, context),
                           ),
                         );
                       }).toList(),
