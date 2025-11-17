@@ -67,231 +67,235 @@ class _AddMoodState extends State<AddMood> {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.addMood)),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            const SizedBox(height: 10),
-            Container(
-              width: 350,
-              height: 350,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: selectedMoodQuadrant == null
-                  ? Column(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedMoodQuadrant =
-                                          MoodQuadrant.highEnergyUnpleasant;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.red.shade200,
-                                        borderRadius: BorderRadius.circular(
-                                          12.0,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .highEnergyAndUnpleasant,
-                                          style: const TextStyle(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const SizedBox(height: 10),
+              Container(
+                width: 350,
+                height: 350,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: selectedMoodQuadrant == null
+                    ? Column(
+                        children: [
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedMoodQuadrant =
+                                            MoodQuadrant.highEnergyUnpleasant;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.red.shade200,
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
                                           ),
-                                          textAlign: TextAlign.center,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .highEnergyAndUnpleasant,
+                                            style: const TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedMoodQuadrant =
-                                          MoodQuadrant.highEnergyPleasant;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.yellow.shade200,
-                                        borderRadius: BorderRadius.circular(
-                                          12.0,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .highEnergyAndPleasant,
-                                          style: const TextStyle(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedMoodQuadrant =
+                                            MoodQuadrant.highEnergyPleasant;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.yellow.shade200,
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
                                           ),
-                                          textAlign: TextAlign.center,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .highEnergyAndPleasant,
+                                            style: const TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedMoodQuadrant =
-                                          MoodQuadrant.lowEnergyUnpleasant;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.blue.shade200,
-                                        borderRadius: BorderRadius.circular(
-                                          12.0,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .lowEnergyAndUnpleasant,
-                                          style: const TextStyle(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                          Expanded(
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedMoodQuadrant =
+                                            MoodQuadrant.lowEnergyUnpleasant;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.blue.shade200,
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
                                           ),
-                                          textAlign: TextAlign.center,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .lowEnergyAndUnpleasant,
+                                            style: const TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Expanded(
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      selectedMoodQuadrant =
-                                          MoodQuadrant.lowEnergyPleasant;
-                                    });
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.green.shade200,
-                                        borderRadius: BorderRadius.circular(
-                                          12.0,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          AppLocalizations.of(context)!
-                                              .lowEnergyAndPleasant,
-                                          style: const TextStyle(
-                                            fontSize: 24.0,
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.black,
+                                Expanded(
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedMoodQuadrant =
+                                            MoodQuadrant.lowEnergyPleasant;
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.green.shade200,
+                                          borderRadius: BorderRadius.circular(
+                                            12.0,
                                           ),
-                                          textAlign: TextAlign.center,
+                                        ),
+                                        child: Center(
+                                          child: Text(
+                                            AppLocalizations.of(context)!
+                                                .lowEnergyAndPleasant,
+                                            style: const TextStyle(
+                                              fontSize: 24.0,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
+                        ],
+                      )
+                    : MoodListWidget(
+                        selectedMood: selectedMood,
+                        setSelectedMood: setSelectedMood,
+                        selectedMoodQuadrant: MoodQuadrant.values.indexOf(
+                          selectedMoodQuadrant!,
                         ),
-                      ],
-                    )
-                  : MoodListWidget(
-                      selectedMood: selectedMood,
-                      setSelectedMood: setSelectedMood,
-                      selectedMoodQuadrant: MoodQuadrant.values.indexOf(
-                        selectedMoodQuadrant!,
                       ),
+              ),
+              const SizedBox(height: 15),
+               Text(AppLocalizations.of(context)!
+                  .notes),
+              const SizedBox(height: 10),
+              // Textfield
+              Container(
+                width: 350,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: TextField(
+                  onChanged: (value) {
+                    moodNotes = value;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
                     ),
-            ),
-            const SizedBox(height: 15),
-            const Text("Notes:"),
-            const SizedBox(height: 10),
-            // Textfield
-            Container(
-              width: 350,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: TextField(
-                onChanged: (value) {
-                  moodNotes = value;
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            const Text("Tags (comma-separated):"),
-            const SizedBox(height: 10),
-            // Textfield
-            Container(
-              width: 350,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-              ),
-              child: TextField(
-                onChanged: (value) {
-                  tags = value.split(',').map((e) => e.trim()).toList();
-                },
-                decoration: InputDecoration(
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12.0),
+              const SizedBox(height: 10),
+               Text(AppLocalizations.of(context)!
+                  .tags),
+              const SizedBox(height: 10),
+              // Textfield
+              Container(
+                width: 350,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: TextField(
+                  onChanged: (value) {
+                    tags = value.split(',').map((e) => e.trim()).toList();
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(height: 10),
-            //Save
-            Container(
-              width: 350,
-              height: 50,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
+              const SizedBox(height: 10),
+              //Save
+              Container(
+                width: 350,
+                height: 50,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12.0),
+                ),
+                child: ElevatedButton(
+                  onPressed: saveMood,
+                  child: const Text('Save'),
+                ),
               ),
-              child: ElevatedButton(
-                onPressed: saveMood,
-                child: const Text('Save'),
-              ),
-            ),
-            const SizedBox(height: 10),
-          ],
+              const SizedBox(height: 10),
+            ],
+          ),
         ),
       ),
     );

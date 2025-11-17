@@ -77,10 +77,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     final colorSchemes = {
-      AppLocalizations.of(context)!.pink: Colors.pink[300]!,
-      AppLocalizations.of(context)!.purple: Colors.purple[300]!,
-      AppLocalizations.of(context)!.blue: Colors.blue,
-      AppLocalizations.of(context)!.beige: Colors.brown[200]!,
+      'Pink': Colors.pink[300]!,
+      'Purple': Colors.purple[300]!,
+      'Blue': Colors.blue,
+      'Beige': Colors.brown[200]!,
+
     };
 
     return Scaffold(

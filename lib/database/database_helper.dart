@@ -40,7 +40,8 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         date TEXT,
         mood TEXT,
-        notes TEXT
+        notes TEXT,
+        tags TEXT
       )
     ''');
   }

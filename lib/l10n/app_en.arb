@@ -1,4 +1,10 @@
 {
+  "notes": "Notes",
+  "tags": "Tags",
+  "mood": "Mood",
+  "date": "Date",
+  "search": "Search",
+  "searchHint": "Search for notes, tags or dates",
   "settings": "Settings",
   "history": "History",
   "graphs": "Graphs",

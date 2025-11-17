@@ -15,28 +15,28 @@ class LanguageSelectionScreen extends StatelessWidget {
       body: ListView(
         children: [
           ListTile(
-            title: Text(AppLocalizations.of(context)!.english),
+            title: Text(AppLocalizations.of(context)!.english +" - english"),
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('en', ''));
             },
           ),
           ListTile(
-            title: Text(AppLocalizations.of(context)!.german),
+            title: Text(AppLocalizations.of(context)!.german + " - deutsch"),
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('de', ''));
             },
           ),
           ListTile(
-            title: Text(AppLocalizations.of(context)!.french),
+            title: Text(AppLocalizations.of(context)!.french + " - français"),
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('fr', ''));
             },
           ),
           ListTile(
-            title: Text(AppLocalizations.of(context)!.spanish),
+            title: Text(AppLocalizations.of(context)!.spanish + " - español"),
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('es', ''));

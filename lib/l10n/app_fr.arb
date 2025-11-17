@@ -1,5 +1,8 @@
 {
-  "helloWorld": "Bonjour le monde!",
+  "notes": "Notes",
+  "tags": "Tags",
+  "search": "Chercher",
+  "searchHint": "Chercher des notes, des tags ou des dates",
   "settings": "Paramètres",
   "history": "Histoire",
   "graphs": "Graphiques",

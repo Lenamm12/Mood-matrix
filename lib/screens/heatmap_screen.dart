@@ -3,6 +3,8 @@ import 'package:flutter_heatmap_calendar/flutter_heatmap_calendar.dart';
 import 'package:mood_matrix/database/database_helper.dart';
 import 'package:mood_matrix/models/entry.dart';
 
+import '../l10n/app_localizations.dart';
+
 class HeatmapScreen extends StatefulWidget {
   const HeatmapScreen({super.key});
 
@@ -57,7 +59,7 @@ class _HeatmapScreenState extends State<HeatmapScreen> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No entries found.'));
+            return Center(child: Text(AppLocalizations.of(context)!.noEntries));
           } else {
             final entries = snapshot.data!;
             final heatmapData = {

@@ -9,6 +9,24 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String get notes => 'Notes';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get mood => 'Mood';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get searchHint => 'Search for notes, tags or dates';
+
+  @override
   String get settings => 'Settings';
 
   @override
@@ -87,7 +105,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get version => 'Version';
 
   @override
-  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle => 'If you want to save your data across devices, please sign in with Google';
+  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle =>
+      'If you want to save your data across devices, please sign in with Google';
 
   @override
   String get pink => 'Pink';

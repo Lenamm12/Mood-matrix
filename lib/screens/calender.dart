@@ -1,5 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../models/entry.dart';
@@ -153,12 +155,13 @@ class _CalendarScreenState extends State<CalendarScreen> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Calendar')),
+      appBar: AppBar(title:  Text(AppLocalizations.of(context)!.calendar)),
       body: Column(
         children: [
           TableCalendar(
             firstDay: DateTime.utc(2020, 1, 1),
             lastDay: DateTime.utc(2030, 12, 31),
+            locale: AppLocalizations.of(context)!.localeName,
             focusedDay: _focusedDay,
             calendarFormat: _calendarFormat,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
@@ -223,16 +226,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildEntriesList() {
     if (_selectedEntries.isEmpty) {
-      return const Center(child: Text('No entries found.'));
+      return Center(child: Text(AppLocalizations.of(context)!.noEntries));
     }
 
     return ListView.builder(
       itemCount: _selectedEntries.length,
       itemBuilder: (context, index) {
         final entry = _selectedEntries[index];
+        final dateTime = DateTime.parse(entry.date).toLocal();
+        final formattedDate =
+        DateFormat.Hm(AppLocalizations.of(context)!.localeName).format(dateTime);
+
         return ListTile(
           title: Text(entry.mood),
           subtitle: Text(entry.notes ?? ""),
+          trailing:Text(formattedDate) ,
         );
       },
     );

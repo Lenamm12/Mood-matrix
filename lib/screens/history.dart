@@ -181,9 +181,9 @@ class _HistoryScreenState extends State<HistoryScreen> {
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
-              decoration: const InputDecoration(
-                labelText: 'Search',
-                hintText: 'Search by mood, notes, or date...',
+              decoration:  InputDecoration(
+                labelText: AppLocalizations.of(context)!.search,
+                hintText: AppLocalizations.of(context)!.searchHint,
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(25.0)),
@@ -209,7 +209,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                       final entry = _filteredEntries[index];
                       final dateTime = DateTime.parse(entry.date).toLocal();
                       final formattedDate =
-                          DateFormat.yMd().add_jm().format(dateTime);
+                          DateFormat.yMd(AppLocalizations.of(context)!.localeName).add_Hm().format(dateTime);
                       final mood = Mood.values.firstWhere(
                           (m) => m.toString().split('.').last == entry.mood);
                       return ListTile(

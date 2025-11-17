@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/screens/heatmap_screen.dart';
 
 class GraphsScreen extends StatelessWidget {
@@ -7,23 +8,13 @@ class GraphsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Graphs')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.graphs)),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HeatmapScreen(),
-                  ),
-                );
-              },
-              child: const HeatmapScreen(),
-            ),
-          ],
+        child: Column( children: [ const HeatmapScreen(),
+          const SizedBox(height: 10),
+          Text("...")
+        ],
+
         ),
       ),
     );

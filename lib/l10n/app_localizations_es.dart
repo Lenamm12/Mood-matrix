@@ -9,6 +9,24 @@ class AppLocalizationsEs extends AppLocalizations {
   AppLocalizationsEs([String locale = 'es']) : super(locale);
 
   @override
+  String get notes => 'Notas';
+
+  @override
+  String get tags => 'Tags';
+
+  @override
+  String get mood => 'Mood';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get search => 'Buscar';
+
+  @override
+  String get searchHint => 'Buscar notas, tags o datos';
+
+  @override
   String get settings => 'Ajustes';
 
   @override
@@ -87,7 +105,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get version => 'Versión';
 
   @override
-  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle => 'Si desea guardar sus datos en todos los dispositivos, inicie sesión con Google';
+  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle =>
+      'Si desea guardar sus datos en todos los dispositivos, inicie sesión con Google';
 
   @override
   String get pink => 'Rosa';
