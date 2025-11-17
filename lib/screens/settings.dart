@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'language_selection_screen.dart';
+import 'package:mood_matrix/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -75,24 +77,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     final colorSchemes = {
-      'Pink': Colors.pink[300]!,
-      'Purple': Colors.purple[300]!,
-      'Blue': Colors.blue,
-      // 'Grey': Colors.grey[200]!,
-      'Beige': Colors.brown[200]!,
+      AppLocalizations.of(context)!.pink: Colors.pink[300]!,
+      AppLocalizations.of(context)!.purple: Colors.purple[300]!,
+      AppLocalizations.of(context)!.blue: Colors.blue,
+      AppLocalizations.of(context)!.beige: Colors.brown[200]!,
     };
 
     return Scaffold(
-      appBar: AppBar(title: Text('Settings')),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.settings)),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: <Widget>[
           Text(
-            'Personalization',
+            AppLocalizations.of(context)!.personalization,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 20),
-          Text('Font Size: ${themeNotifier.fontSize.toStringAsFixed(1)}'),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const LanguageSelectionScreen(),
+                ),
+              );
+            },
+            child: Text(AppLocalizations.of(context)!.language),
+          ),
+          const SizedBox(height: 20),
+          Text(
+              '${AppLocalizations.of(context)!.fontSize}: ${themeNotifier.fontSize.toStringAsFixed(1)}'),
           Slider(
             value: themeNotifier.fontSize,
             min: 12.0,
@@ -104,7 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
           const SizedBox(height: 20),
-          const Text('Color Scheme'),
+          Text(AppLocalizations.of(context)!.colorScheme),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -135,7 +149,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text('Dark Mode'),
+              Text(AppLocalizations.of(context)!.darkMode),
               Switch(
                 value: themeNotifier.isDarkMode,
                 onChanged: (bool value) {
@@ -148,40 +162,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
           const SizedBox(height: 40),
-          Text('User data', style: Theme.of(context).textTheme.headlineSmall),
+          Text(AppLocalizations.of(context)!.userData,
+              style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 20),
           Text(
-            'If you want to save your data across devices, please sign in with Google',
+            AppLocalizations.of(context)!
+                .ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle,
           ),
           Center(
             child: ElevatedButton(
               onPressed: _signInWithGoogle,
-              child: const Text('Sign in with Google'),
+              child: Text(AppLocalizations.of(context)!.signInWithGoogle),
             ),
           ),
           const SizedBox(height: 40),
-          Text('Feedback', style: Theme.of(context).textTheme.headlineSmall),
+          Text(AppLocalizations.of(context)!.feedback,
+              style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 20),
           Row(
             children: [
               TextButton(
                 onPressed: rateApp,
-                child: const Text('Rate this app'),
+                child: Text(AppLocalizations.of(context)!.rateThisApp),
               ),
-              TextButton(onPressed: contactUs, child: const Text('Contact Us')),
+              TextButton(
+                  onPressed: contactUs,
+                  child: Text(AppLocalizations.of(context)!.contactUs)),
             ],
           ),
 
           const SizedBox(height: 40),
-          Text('Information', style: Theme.of(context).textTheme.headlineSmall),
+          Text(AppLocalizations.of(context)!.information,
+              style: Theme.of(context).textTheme.headlineSmall),
           const SizedBox(height: 20),
           Row(
             children: [
               TextButton(
                 onPressed: openPlayStore,
-                child: const Text('Other apps'),
+                child: Text(AppLocalizations.of(context)!.otherApps),
               ),
-              TextButton(onPressed: openWeb, child: const Text('Our website')),
+              TextButton(
+                  onPressed: openWeb,
+                  child: Text(AppLocalizations.of(context)!.ourWebsite)),
             ],
           ),
 
@@ -190,16 +212,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             children: [
               TextButton(
                 onPressed: termsOfService,
-                child: const Text('Terms of Service'),
+                child: Text(AppLocalizations.of(context)!.termsOfService),
               ),
               TextButton(
                 onPressed: privacyPolicy,
-                child: const Text('Privacy Policy'),
+                child: Text(AppLocalizations.of(context)!.privacyPolicy),
               ),
             ],
           ),
 
-          const Text('Version: 1.0.0'),
+          Text('${AppLocalizations.of(context)!.version}: 1.0.0'),
         ],
       ),
     );

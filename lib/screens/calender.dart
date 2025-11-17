@@ -92,8 +92,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
       if (mounted) {
         setState(() {
           _entries = newEntries;
-          if(_selectedDay != null){
-              _selectedEntries = _getEntriesForDay(_selectedDay!);
+          if (_selectedDay != null) {
+            _selectedEntries = _getEntriesForDay(_selectedDay!);
           }
         });
       }
@@ -114,7 +114,9 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Color getMoodColor(String mood, BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context, listen: false);
-    final moodIndex = Mood.values.indexWhere((m) => m.toString().split('.').last == mood);
+    final moodIndex = Mood.values.indexWhere(
+      (m) => m.toString().split('.').last == mood,
+    );
     if (moodIndex == -1) {
       return Colors.grey; // Default color if mood not found
     }
@@ -122,7 +124,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     final qIndex = (moodIndex ~/ 6 < 3 ? 0 : 2) + (moodIndex % 6 < 3 ? 0 : 1);
     final quadrant = MoodQuadrant.values[qIndex];
 
-    if(themeNotifier.isDarkMode) {
+    if (themeNotifier.isDarkMode) {
       switch (quadrant) {
         case MoodQuadrant.highEnergyUnpleasant:
           return Colors.red.shade400;
@@ -133,8 +135,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         case MoodQuadrant.lowEnergyPleasant:
           return Colors.green.shade400;
       }
-    }
-    else{
+    } else {
       switch (quadrant) {
         case MoodQuadrant.highEnergyUnpleasant:
           return Colors.red.shade200;
@@ -191,18 +192,21 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     bottom: 1,
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
-                      children: events.reversed.map((event) {
-                        final entry = event as Entry;
-                        return Container(
-                          width: 7.0,
-                          height: 7.0,
-                          margin: const EdgeInsets.symmetric(horizontal: 1.5),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: getMoodColor(entry.mood, context),
-                          ),
-                        );
-                      }).toList(),
+                      children:
+                          events.reversed.map((event) {
+                            final entry = event as Entry;
+                            return Container(
+                              width: 7.0,
+                              height: 7.0,
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 1.5,
+                              ),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: getMoodColor(entry.mood, context),
+                              ),
+                            );
+                          }).toList(),
                     ),
                   );
                 }
@@ -219,7 +223,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
 
   Widget _buildEntriesList() {
     if (_selectedEntries.isEmpty) {
-      return const Center(child: Text('No entries for this day.'));
+      return const Center(child: Text('No entries found.'));
     }
 
     return ListView.builder(
