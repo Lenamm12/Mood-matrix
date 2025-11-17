@@ -105,8 +105,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get version => 'Version';
 
   @override
-  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle =>
-      'Si vous souhaitez enregistrer vos données sur plusieurs appareils, veuillez vous connecter avec Google';
+  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle => 'Si vous souhaitez enregistrer vos données sur plusieurs appareils, veuillez vous connecter avec Google';
 
   @override
   String get pink => 'Rose';

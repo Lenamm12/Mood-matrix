@@ -3,51 +3,8 @@ import 'package:mood_matrix/database/database_helper.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/models/entry.dart';
 
-enum MoodQuadrant {
-  highEnergyUnpleasant,
-  highEnergyPleasant,
-  lowEnergyUnpleasant,
-  lowEnergyPleasant,
-}
+import '../models/Moods.dart';
 
-enum Mood {
-  Enraged,
-  Stressed,
-  Shocked,
-  Surprised,
-  Festive,
-  Ecstatic,
-  Fuming,
-  Angry,
-  Restless,
-  Energized,
-  Optimistic,
-  Excited,
-  Repulsed,
-  Worried,
-  Uneasy,
-  Pleasant,
-  Hopeful,
-  Blissful,
-  Disgusted,
-  Down,
-  Apathetic,
-  Ease,
-  Content,
-  Fulfilled,
-  Miserable,
-  Lonely,
-  Tired,
-  Relaxed,
-  Restful,
-  Balanced,
-  Despair,
-  Desolate,
-  Drained,
-  Sleepy,
-  Tranquil,
-  Serene,
-}
 
 class AddMood extends StatefulWidget {
   const AddMood({super.key});
@@ -379,82 +336,6 @@ class MoodListWidget extends StatelessWidget {
     }
   }
 
-  String getMoodTranslation(BuildContext context, Mood mood) {
-    switch (mood) {
-      case Mood.Enraged:
-        return AppLocalizations.of(context)!.enraged;
-      case Mood.Stressed:
-        return AppLocalizations.of(context)!.stressed;
-      case Mood.Shocked:
-        return AppLocalizations.of(context)!.shocked;
-      case Mood.Surprised:
-        return AppLocalizations.of(context)!.surprised;
-      case Mood.Festive:
-        return AppLocalizations.of(context)!.festive;
-      case Mood.Ecstatic:
-        return AppLocalizations.of(context)!.ecstatic;
-      case Mood.Fuming:
-        return AppLocalizations.of(context)!.fuming;
-      case Mood.Angry:
-        return AppLocalizations.of(context)!.angry;
-      case Mood.Restless:
-        return AppLocalizations.of(context)!.restless;
-      case Mood.Energized:
-        return AppLocalizations.of(context)!.energized;
-      case Mood.Optimistic:
-        return AppLocalizations.of(context)!.optimistic;
-      case Mood.Excited:
-        return AppLocalizations.of(context)!.excited;
-      case Mood.Repulsed:
-        return AppLocalizations.of(context)!.repulsed;
-      case Mood.Worried:
-        return AppLocalizations.of(context)!.worried;
-      case Mood.Uneasy:
-        return AppLocalizations.of(context)!.uneasy;
-      case Mood.Pleasant:
-        return AppLocalizations.of(context)!.pleasant;
-      case Mood.Hopeful:
-        return AppLocalizations.of(context)!.hopeful;
-      case Mood.Blissful:
-        return AppLocalizations.of(context)!.blissful;
-      case Mood.Disgusted:
-        return AppLocalizations.of(context)!.disgusted;
-      case Mood.Down:
-        return AppLocalizations.of(context)!.down;
-      case Mood.Apathetic:
-        return AppLocalizations.of(context)!.apathetic;
-      case Mood.Ease:
-        return AppLocalizations.of(context)!.ease;
-      case Mood.Content:
-        return AppLocalizations.of(context)!.content;
-      case Mood.Fulfilled:
-        return AppLocalizations.of(context)!.fulfilled;
-      case Mood.Miserable:
-        return AppLocalizations.of(context)!.miserable;
-      case Mood.Lonely:
-        return AppLocalizations.of(context)!.lonely;
-      case Mood.Tired:
-        return AppLocalizations.of(context)!.tired;
-      case Mood.Relaxed:
-        return AppLocalizations.of(context)!.relaxed;
-      case Mood.Restful:
-        return AppLocalizations.of(context)!.restful;
-      case Mood.Balanced:
-        return AppLocalizations.of(context)!.balanced;
-      case Mood.Despair:
-        return AppLocalizations.of(context)!.despair;
-      case Mood.Desolate:
-        return AppLocalizations.of(context)!.desolate;
-      case Mood.Drained:
-        return AppLocalizations.of(context)!.drained;
-      case Mood.Sleepy:
-        return AppLocalizations.of(context)!.sleepy;
-      case Mood.Tranquil:
-        return AppLocalizations.of(context)!.tranquil;
-      case Mood.Serene:
-        return AppLocalizations.of(context)!.serene;
-    }
-  }
 
   @override
   Widget build(BuildContext context) {

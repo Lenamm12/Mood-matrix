@@ -9,12 +9,15 @@ class GraphsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(AppLocalizations.of(context)!.graphs)),
-      body: Center(
-        child: Column( children: [ const HeatmapScreen(),
-          const SizedBox(height: 10),
-          Text("...")
-        ],
-
+      body: const SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              HeatmapWidget(),
+              SizedBox(height: 10),
+              Text("..."),
+            ],
+          ),
         ),
       ),
     );
