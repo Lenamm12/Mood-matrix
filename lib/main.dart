@@ -2,8 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
-import 'models/locale_notifier.dart';
-import 'models/theme_notifier.dart';
+import 'notifier/entry_notifier.dart';
+import 'notifier/locale_notifier.dart';
+import 'notifier/theme_notifier.dart';
 import 'screens/graphs.dart';
 import 'screens/history.dart';
 import 'screens/add_mood.dart';
@@ -19,6 +20,7 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (_) => ThemeNotifier()),
         ChangeNotifierProvider(create: (_) => LocaleNotifier()),
+        ChangeNotifierProvider(create: (_) => EntryNotifier()..loadEntries()),
       ],
       child: const MyApp(),
     ),

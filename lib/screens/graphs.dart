@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
-import 'package:mood_matrix/screens/heatmap_screen.dart';
+import 'package:mood_matrix/widgets/heatmap_widget.dart';
 
 class GraphsScreen extends StatelessWidget {
   const GraphsScreen({super.key});

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../l10n/app_localizations.dart';
-import 'theme_notifier.dart';
+import '../notifier/theme_notifier.dart';
 
 enum MoodQuadrant {
   highEnergyUnpleasant,

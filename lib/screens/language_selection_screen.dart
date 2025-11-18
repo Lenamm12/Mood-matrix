@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
-import 'package:mood_matrix/models/locale_notifier.dart';
+import 'package:mood_matrix/notifier/locale_notifier.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSelectionScreen extends StatelessWidget {

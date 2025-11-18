@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mood_matrix/database/database_helper.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/models/entry.dart';
+import 'package:mood_matrix/notifier/entry_notifier.dart';
+import 'package:provider/provider.dart';
 
 import '../models/Moods.dart';
-
 
 class AddMood extends StatefulWidget {
   const AddMood({super.key});
@@ -194,8 +194,7 @@ class _AddMoodState extends State<AddMood> {
                       ),
               ),
               const SizedBox(height: 15),
-               Text(AppLocalizations.of(context)!
-                  .notes),
+              Text(AppLocalizations.of(context)!.notes),
               const SizedBox(height: 10),
               // Textfield
               Container(
@@ -216,8 +215,7 @@ class _AddMoodState extends State<AddMood> {
                 ),
               ),
               const SizedBox(height: 10),
-               Text(AppLocalizations.of(context)!
-                  .tags),
+              Text(AppLocalizations.of(context)!.tags),
               const SizedBox(height: 10),
               // Textfield
               Container(
@@ -279,7 +277,7 @@ class _AddMoodState extends State<AddMood> {
         notes: moodNotes,
         tags: tags,
       );
-      await DatabaseHelper.instance.insertEntry(newEntry);
+      await Provider.of<EntryNotifier>(context, listen: false).addEntry(newEntry);
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text('Mood saved successfully!')));
@@ -297,8 +295,8 @@ class _AddMoodState extends State<AddMood> {
   }
 }
 
-class MoodListWidget extends StatelessWidget {
-  MoodListWidget({
+class MoodListWidget extends StatefulWidget {
+  const MoodListWidget({
     super.key,
     required this.selectedMood,
     required this.setSelectedMood,
@@ -309,33 +307,34 @@ class MoodListWidget extends StatelessWidget {
   final Function(Mood) setSelectedMood;
   final int? selectedMoodQuadrant;
 
+  @override
+  State<MoodListWidget> createState() => _MoodListWidgetState();
+}
+
+class _MoodListWidgetState extends State<MoodListWidget> {
   final viewTransformationController = TransformationController();
 
-  // Initialize the viewTransformationController in initState.
-  initState() {
+  @override
+  void initState() {
+    super.initState();
     // Zoomed x 2
     viewTransformationController.value = Matrix4.identity().scaled(2.0);
 
     // Translate based on the selected quadrant.
-    if (selectedMoodQuadrant == 0) {
+    if (widget.selectedMoodQuadrant == 0) {
       // upper left corner
-      viewTransformationController.value =
-          viewTransformationController.value..translate(-0.5, -0.5);
-    } else if (selectedMoodQuadrant == 1) {
+      viewTransformationController.value.translate(-85.0, -85.0);
+    } else if (widget.selectedMoodQuadrant == 1) {
       // upper right corner
-      viewTransformationController.value =
-          viewTransformationController.value..translate(0.5, -0.5);
-    } else if (selectedMoodQuadrant == 2) {
+      viewTransformationController.value.translate(85.0, -85.0);
+    } else if (widget.selectedMoodQuadrant == 2) {
       // lower left corner
-      viewTransformationController.value =
-          viewTransformationController.value..translate(-0.5, 0.5);
-    } else if (selectedMoodQuadrant == 3) {
+      viewTransformationController.value.translate(-85.0, 85.0);
+    } else if (widget.selectedMoodQuadrant == 3) {
       // lower right corner
-      viewTransformationController.value =
-          viewTransformationController.value..translate(0.5, 0.5);
+      viewTransformationController.value.translate(85.0, 85.0);
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -356,13 +355,13 @@ class MoodListWidget extends StatelessWidget {
             final quadrant = MoodQuadrant.values[qIndex];
             final mood = Mood.values[index];
             final label = getMoodTranslation(context, mood);
-            final isSelected = selectedMood == mood;
+            final isSelected = widget.selectedMood == mood;
             return MoodWidget(
               quadrant: quadrant,
               label: label,
               isSelected: isSelected,
               onTap: () {
-                setSelectedMood(mood);
+                widget.setSelectedMood(mood);
               },
             );
           }),
