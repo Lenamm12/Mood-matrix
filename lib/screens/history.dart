@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/notifier/entry_notifier.dart';
 import 'package:provider/provider.dart';
-import '../models/Moods.dart';
+import '../models/moods.dart';
 import '../models/entry.dart';
 
 class HistoryScreen extends StatefulWidget {

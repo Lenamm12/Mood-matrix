@@ -4,8 +4,9 @@ import 'package:mood_matrix/models/entry.dart';
 import 'package:mood_matrix/notifier/entry_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../models/Moods.dart';
+import '../models/moods.dart';
 
+// ignore: constant_identifier_names
 enum HeatmapTime { WEEK, MONTH, YEAR }
 
 class HeatmapWidget extends StatefulWidget {
@@ -20,65 +21,72 @@ class _HeatmapWidgetState extends State<HeatmapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<EntryNotifier>(builder: (context, entryNotifier, child) {
-      if (entryNotifier.entries.isEmpty) {
-        return Center(child: Text(AppLocalizations.of(context)!.noEntries));
-      }
+    return Consumer<EntryNotifier>(
+      builder: (context, entryNotifier, child) {
+        if (entryNotifier.entries.isEmpty) {
+          return Center(child: Text(AppLocalizations.of(context)!.noEntries));
+        }
 
-      List<Entry> entriesWithDate =
-          entryNotifier.entries.where((element) => element.date != null).toList();
+        List<Entry> entriesWithDate = entryNotifier.entries.toList();
 
-      final now = DateTime.now();
-      List<Entry> filteredEntries;
+        final now = DateTime.now();
+        List<Entry> filteredEntries;
 
-      switch (selectedTime) {
-        case HeatmapTime.WEEK:
-          final weekAgo = now.subtract(const Duration(days: 7));
-          filteredEntries = entriesWithDate
-              .where((entry) => DateTime.parse(entry.date).isAfter(weekAgo))
-              .toList();
-          break;
-        case HeatmapTime.MONTH:
-          final monthAgo = now.subtract(const Duration(days: 30));
-          filteredEntries = entriesWithDate
-              .where((entry) => DateTime.parse(entry.date).isAfter(monthAgo))
-              .toList();
-          break;
-        case HeatmapTime.YEAR:
-          final yearAgo = now.subtract(const Duration(days: 365));
-          filteredEntries = entriesWithDate
-              .where((entry) => DateTime.parse(entry.date).isAfter(yearAgo))
-              .toList();
-          break;
-        default:
-          filteredEntries = entriesWithDate;
-      }
+        switch (selectedTime) {
+          case HeatmapTime.WEEK:
+            final weekAgo = now.subtract(const Duration(days: 7));
+            filteredEntries =
+                entriesWithDate
+                    .where(
+                      (entry) => DateTime.parse(entry.date).isAfter(weekAgo),
+                    )
+                    .toList();
+            break;
+          case HeatmapTime.MONTH:
+            final monthAgo = now.subtract(const Duration(days: 30));
+            filteredEntries =
+                entriesWithDate
+                    .where(
+                      (entry) => DateTime.parse(entry.date).isAfter(monthAgo),
+                    )
+                    .toList();
+            break;
+          case HeatmapTime.YEAR:
+            final yearAgo = now.subtract(const Duration(days: 365));
+            filteredEntries =
+                entriesWithDate
+                    .where(
+                      (entry) => DateTime.parse(entry.date).isAfter(yearAgo),
+                    )
+                    .toList();
+            break;
+          default:
+            filteredEntries = entriesWithDate;
+        }
 
-      return Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          DropdownButton<HeatmapTime>(
-            value: selectedTime,
-            onChanged: (HeatmapTime? newValue) {
-              setState(() {
-                selectedTime = newValue;
-              });
-            },
-            items: HeatmapTime.values.map((HeatmapTime time) {
-              return DropdownMenuItem<HeatmapTime>(
-                value: time,
-                child: Text(time.toString().split('.').last),
-              );
-            }).toList(),
-          ),
-          MoodBoardWidget(
-            entries: filteredEntries,
-          ),
-        ],
-      );
-    });
+        return Column(
+          children: [
+            const SizedBox(height: 20),
+            DropdownButton<HeatmapTime>(
+              value: selectedTime,
+              onChanged: (HeatmapTime? newValue) {
+                setState(() {
+                  selectedTime = newValue;
+                });
+              },
+              items:
+                  HeatmapTime.values.map((HeatmapTime time) {
+                    return DropdownMenuItem<HeatmapTime>(
+                      value: time,
+                      child: Text(time.toString().split('.').last),
+                    );
+                  }).toList(),
+            ),
+            MoodBoardWidget(entries: filteredEntries),
+          ],
+        );
+      },
+    );
   }
 }
 
@@ -99,11 +107,7 @@ class _MoodBoardWidgetState extends State<MoodBoardWidget> {
       try {
         final mood = Mood.values.byName(entry.mood);
 
-        moodCount.update(
-          mood,
-          (value) => value + 1,
-          ifAbsent: () => 1,
-        );
+        moodCount.update(mood, (value) => value + 1, ifAbsent: () => 1);
       } catch (e) {
         // Mood probably deleted
       }
@@ -156,7 +160,8 @@ class MoodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final opacity = percentage == null ? 0.1 : (percentage! * 5).clamp(0.1, 1.0);
+    final opacity =
+        percentage == null ? 0.1 : (percentage! * 5).clamp(0.1, 1.0);
 
     return GestureDetector(
       onTap: onTap,
@@ -165,15 +170,16 @@ class MoodWidget extends StatelessWidget {
         height: double.infinity,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8.0),
-          color: quadrant == MoodQuadrant.highEnergyUnpleasant
-              ? Colors.red.withOpacity(opacity)
-              : quadrant == MoodQuadrant.highEnergyPleasant
+          color:
+              quadrant == MoodQuadrant.highEnergyUnpleasant
+                  ? Colors.red.withOpacity(opacity)
+                  : quadrant == MoodQuadrant.highEnergyPleasant
                   ? Colors.yellow.withOpacity(opacity)
                   : quadrant == MoodQuadrant.lowEnergyUnpleasant
-                      ? Colors.blue.withOpacity(opacity)
-                      : quadrant == MoodQuadrant.lowEnergyPleasant
-                          ? Colors.green.withOpacity(opacity)
-                          : Colors.transparent,
+                  ? Colors.blue.withOpacity(opacity)
+                  : quadrant == MoodQuadrant.lowEnergyPleasant
+                  ? Colors.green.withOpacity(opacity)
+                  : Colors.transparent,
         ),
         child: Center(
           child: Padding(

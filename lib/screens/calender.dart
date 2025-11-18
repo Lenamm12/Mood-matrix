@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../models/Moods.dart';
+import '../models/moods.dart';
 import '../models/entry.dart';
 import '../notifier/entry_notifier.dart';
 import '../notifier/theme_notifier.dart';

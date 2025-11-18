@@ -51,7 +51,6 @@ class AuthService {
     // Upload local products to Firestore
     if (localEntries.isNotEmpty) {
       final batch = firestore.batch();
-      for (final entry in localEntries) {}
       await batch.commit();
       print('Uploaded ${localEntries.length} products to Firestore.');
     }

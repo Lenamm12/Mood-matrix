@@ -4,7 +4,7 @@ import 'package:mood_matrix/models/entry.dart';
 import 'package:mood_matrix/notifier/entry_notifier.dart';
 import 'package:provider/provider.dart';
 
-import '../models/Moods.dart';
+import '../models/moods.dart';
 
 class AddMood extends StatefulWidget {
   const AddMood({super.key});
