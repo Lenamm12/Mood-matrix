@@ -7,12 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:417641703736:android:08cb0a18bf12265e8eb9cd",
+        "mobilesdk_app_id": "1:417641703736:android:430f076c216c9a678eb9cd",
         "android_client_info": {
-          "package_name": "de.lenazeise.moodmatrix"
+          "package_name": "de.jelestudios.moodmatrix"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "417641703736-hum8k8uaqckf6ka9lrgrfhnnoljafb7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDiCWO5pt5iW693ss-lgHAObSIlYBqsqNE"
@@ -20,7 +25,41 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417641703736-hum8k8uaqckf6ka9lrgrfhnnoljafb7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:417641703736:android:08cb0a18bf12265e8eb9cd",
+        "android_client_info": {
+          "package_name": "de.lenazeise.moodmatrix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "417641703736-hum8k8uaqckf6ka9lrgrfhnnoljafb7l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiCWO5pt5iW693ss-lgHAObSIlYBqsqNE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "417641703736-hum8k8uaqckf6ka9lrgrfhnnoljafb7l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

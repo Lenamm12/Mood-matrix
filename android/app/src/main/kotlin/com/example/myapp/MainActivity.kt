@@ -1,4 +1,4 @@
-package de.lenazeise.moodmatrix
+package de.jelestudios.moodmatrix
 
 import io.flutter.embedding.android.FlutterActivity
 
