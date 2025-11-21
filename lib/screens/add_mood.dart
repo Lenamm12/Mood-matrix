@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/models/entry.dart';
@@ -313,6 +315,10 @@ class MoodListWidget extends StatefulWidget {
 
 class _MoodListWidgetState extends State<MoodListWidget> {
   final viewTransformationController = TransformationController();
+  final widgetWidth = PlatformDispatcher.instance.implicitView!.physicalSize.width /
+      PlatformDispatcher.instance.implicitView!.devicePixelRatio -
+      16;
+
 
   @override
   void initState() {
@@ -323,16 +329,16 @@ class _MoodListWidgetState extends State<MoodListWidget> {
     // Translate based on the selected quadrant.
     if (widget.selectedMoodQuadrant == 0) {
       // upper left corner
-      viewTransformationController.value.translate(-85.0, -85.0);
+      viewTransformationController.value.translate(widgetWidth, widgetWidth);
     } else if (widget.selectedMoodQuadrant == 1) {
       // upper right corner
-      viewTransformationController.value.translate(85.0, -85.0);
+      viewTransformationController.value.translate(-widgetWidth, widgetWidth);
     } else if (widget.selectedMoodQuadrant == 2) {
       // lower left corner
-      viewTransformationController.value.translate(-85.0, 85.0);
+      viewTransformationController.value.translate(widgetWidth, -widgetWidth);
     } else if (widget.selectedMoodQuadrant == 3) {
       // lower right corner
-      viewTransformationController.value.translate(85.0, 85.0);
+      viewTransformationController.value.translate(-widgetWidth, -widgetWidth);
     }
   }
 
