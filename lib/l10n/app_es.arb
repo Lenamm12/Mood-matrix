@@ -35,6 +35,7 @@
   "blue": "Azul",
   "beige": "Beige",
   "noEntries": "No se encontraron entradas.",
+  "noMatchingEntries": "No se encontraron entradas que coincidan.",
   "highEnergyAndUnpleasant": "Alta energía y desagradable",
   "highEnergyAndPleasant": "Alta energía y agradable",
   "lowEnergyAndUnpleasant": "Baja energía y desagradable",

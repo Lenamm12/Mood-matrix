@@ -37,6 +37,7 @@
   "blue": "Blau",
   "beige": "Beige",
   "noEntries": "Keine Einträge gefunden.",
+  "noMatchingEntries": "Keine passenden Einträge gefunden.",
   "highEnergyAndUnpleasant": "Hohe Energie & Unangenehm",
   "highEnergyAndPleasant": "Hohe Energie & Angenehm",
   "lowEnergyAndUnpleasant": "Niedrige Energie & Unangenehm",

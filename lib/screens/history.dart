@@ -14,34 +14,7 @@ class HistoryScreen extends StatefulWidget {
 }
 
 class _HistoryScreenState extends State<HistoryScreen> {
-  List<Entry> _filteredEntries = [];
   final TextEditingController _searchController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    final entryNotifier = Provider.of<EntryNotifier>(context, listen: false);
-    _filteredEntries = entryNotifier.entries;
-    _searchController.addListener(_filterEntries);
-  }
-
-  void _filterEntries() {
-    final query = _searchController.text.toLowerCase();
-    final entryNotifier = Provider.of<EntryNotifier>(context, listen: false);
-    setState(() {
-      _filteredEntries = entryNotifier.entries.where((entry) {
-        final mood = entry.mood.toLowerCase();
-        final notes = entry.notes?.toLowerCase() ?? '';
-        final date = DateFormat.yMd()
-            .add_jm()
-            .format(DateTime.parse(entry.date).toLocal())
-            .toLowerCase();
-        return mood.contains(query) ||
-            notes.contains(query) ||
-            date.contains(query);
-      }).toList();
-    });
-  }
 
   @override
   void dispose() {
@@ -51,16 +24,34 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final entryNotifier = Provider.of<EntryNotifier>(context);
+    final query = _searchController.text.toLowerCase();
+
+    final filteredEntries =
+        entryNotifier.entries.where((entry) {
+          final mood = entry.mood.toLowerCase();
+          final notes = entry.notes?.toLowerCase() ?? '';
+          final date =
+              DateFormat.yMd()
+                  .add_jm()
+                  .format(DateTime.parse(entry.date).toLocal())
+                  .toLowerCase();
+          return mood.contains(query) ||
+              notes.contains(query) ||
+              date.contains(query);
+        }).toList();
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppLocalizations.of(context)!.history),
-      ),
+      appBar: AppBar(title: Text(AppLocalizations.of(context)!.history)),
       body: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
               controller: _searchController,
+              onChanged: (value) {
+                setState(() {});
+              },
               decoration: InputDecoration(
                 labelText: AppLocalizations.of(context)!.search,
                 hintText: AppLocalizations.of(context)!.searchHint,
@@ -72,23 +63,33 @@ class _HistoryScreenState extends State<HistoryScreen> {
             ),
           ),
           Expanded(
-            child: Consumer<EntryNotifier>(
-              builder: (context, entryNotifier, child) {
+            child: Builder(
+              builder: (context) {
                 if (entryNotifier.entries.isEmpty) {
                   return Center(
-                      child: Text(AppLocalizations.of(context)!.noEntries));
+                    child: Text(AppLocalizations.of(context)!.noEntries),
+                  );
                 }
-                _filterEntries();
+
+                if (filteredEntries.isEmpty) {
+                  return Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.noMatchingEntries,
+                    ),
+                  );
+                }
+
                 return ListView.builder(
-                  itemCount: _filteredEntries.length,
+                  itemCount: filteredEntries.length,
                   itemBuilder: (context, index) {
-                    final entry = _filteredEntries[index];
+                    final entry = filteredEntries[index];
                     final dateTime = DateTime.parse(entry.date).toLocal();
-                    final formattedDate = DateFormat.yMd(AppLocalizations.of(context)!.localeName)
-                        .add_Hm()
-                        .format(dateTime);
+                    final formattedDate = DateFormat.yMd(
+                      AppLocalizations.of(context)!.localeName,
+                    ).add_Hm().format(dateTime);
                     final mood = Mood.values.firstWhere(
-                        (m) => m.toString().split('.').last == entry.mood);
+                      (m) => m.toString().split('.').last == entry.mood,
+                    );
                     return ListTile(
                       leading: Icon(
                         Icons.circle,

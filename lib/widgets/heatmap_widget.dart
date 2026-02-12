@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/models/entry.dart';
 import 'package:mood_matrix/notifier/entry_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../models/moods.dart';
+import '../notifier/theme_notifier.dart';
 
 // ignore: constant_identifier_names
 enum HeatmapTime { WEEK, MONTH, YEAR }
@@ -17,7 +19,69 @@ class HeatmapWidget extends StatefulWidget {
 }
 
 class _HeatmapWidgetState extends State<HeatmapWidget> {
-  HeatmapTime? selectedTime = HeatmapTime.WEEK;
+  HeatmapTime _timeframe = HeatmapTime.WEEK;
+  late DateTime _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _endDate = DateTime.now();
+  }
+
+  DateTime _addMonths(DateTime date, int months) {
+    var newMonth = date.month + months;
+    var newYear = date.year;
+
+    while (newMonth > 12) {
+      newMonth -= 12;
+      newYear++;
+    }
+    while (newMonth <= 0) {
+      newMonth += 12;
+      newYear--;
+    }
+
+    final daysInNewMonth = DateUtils.getDaysInMonth(newYear, newMonth);
+    final newDay = date.day > daysInNewMonth ? daysInNewMonth : date.day;
+
+    return DateTime(
+      newYear,
+      newMonth,
+      newDay,
+      date.hour,
+      date.minute,
+      date.second,
+      date.millisecond,
+      date.microsecond,
+    );
+  }
+
+  void _navigateDate(bool forward) {
+    setState(() {
+      DateTime newEndDate;
+      switch (_timeframe) {
+        case HeatmapTime.WEEK:
+          newEndDate = _endDate.add(Duration(days: forward ? 7 : -7));
+          break;
+        case HeatmapTime.MONTH:
+          newEndDate = _addMonths(_endDate, forward ? 1 : -1);
+          break;
+        case HeatmapTime.YEAR:
+          newEndDate = DateTime(
+            _endDate.year + (forward ? 1 : -1),
+            _endDate.month,
+            _endDate.day,
+          );
+          break;
+      }
+
+      if (newEndDate.isAfter(DateTime.now())) {
+        _endDate = DateTime.now();
+      } else {
+        _endDate = newEndDate;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,58 +93,85 @@ class _HeatmapWidgetState extends State<HeatmapWidget> {
 
         List<Entry> entriesWithDate = entryNotifier.entries.toList();
 
-        final now = DateTime.now();
-        List<Entry> filteredEntries;
-
-        switch (selectedTime) {
+        final DateTime startDate;
+        switch (_timeframe) {
           case HeatmapTime.WEEK:
-            final weekAgo = now.subtract(const Duration(days: 7));
-            filteredEntries =
-                entriesWithDate
-                    .where(
-                      (entry) => DateTime.parse(entry.date).isAfter(weekAgo),
-                    )
-                    .toList();
+            startDate = _endDate.subtract(const Duration(days: 7));
             break;
           case HeatmapTime.MONTH:
-            final monthAgo = now.subtract(const Duration(days: 30));
-            filteredEntries =
-                entriesWithDate
-                    .where(
-                      (entry) => DateTime.parse(entry.date).isAfter(monthAgo),
-                    )
-                    .toList();
+            startDate = _addMonths(_endDate, -1);
             break;
           case HeatmapTime.YEAR:
-            final yearAgo = now.subtract(const Duration(days: 365));
-            filteredEntries =
-                entriesWithDate
-                    .where(
-                      (entry) => DateTime.parse(entry.date).isAfter(yearAgo),
-                    )
-                    .toList();
+            startDate = DateTime(
+              _endDate.year - 1,
+              _endDate.month,
+              _endDate.day,
+            );
             break;
-          default:
-            filteredEntries = entriesWithDate;
         }
+
+        final filteredEntries =
+            entriesWithDate.where((entry) {
+              final entryDate = DateTime.parse(entry.date);
+              return entryDate.isAfter(startDate) &&
+                  entryDate.isBefore(_endDate);
+            }).toList();
+
+        final bool canNavigateForward =
+            !DateUtils.isSameDay(_endDate, DateTime.now());
 
         return Column(
           children: [
             const SizedBox(height: 20),
-            DropdownButton<HeatmapTime>(
-              value: selectedTime,
-              onChanged: (HeatmapTime? newValue) {
-                setState(() {
-                  selectedTime = newValue;
-                });
-              },
-              items:
-                  HeatmapTime.values.map((HeatmapTime time) {
-                    return DropdownMenuItem<HeatmapTime>(
-                      value: time,
-                      child: Text(time.toString().split('.').last),
-                    );
-                  }).toList(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed:
+                      () => setState(() {
+                        _timeframe = HeatmapTime.WEEK;
+                        _endDate = DateTime.now();
+                      }),
+                  child: const Text('Week'),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed:
+                      () => setState(() {
+                        _timeframe = HeatmapTime.MONTH;
+                        _endDate = DateTime.now();
+                      }),
+                  child: const Text('Month'),
+                ),
+                const SizedBox(width: 10),
+                ElevatedButton(
+                  onPressed:
+                      () => setState(() {
+                        _timeframe = HeatmapTime.YEAR;
+                        _endDate = DateTime.now();
+                      }),
+                  child: const Text('Year'),
+                ),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back),
+                  onPressed: () => _navigateDate(false),
+                ),
+                Text(
+                  _timeframe == HeatmapTime.YEAR
+                      ? DateFormat.y().format(_endDate)
+                      : '${DateFormat.yMd().format(startDate)} - ${DateFormat.yMd().format(_endDate)}',
+                ),
+                IconButton(
+                  icon: const Icon(Icons.arrow_forward),
+                  onPressed:
+                      canNavigateForward ? () => _navigateDate(true) : null,
+                ),
+              ],
             ),
             MoodBoardWidget(entries: filteredEntries),
           ],
@@ -99,6 +190,48 @@ class MoodBoardWidget extends StatefulWidget {
 }
 
 class _MoodBoardWidgetState extends State<MoodBoardWidget> {
+  void _showMoodEntries(BuildContext context, Mood mood) {
+    final moodEntries =
+        widget.entries.where((entry) {
+          try {
+            return Mood.values.byName(entry.mood) == mood;
+          } catch (e) {
+            return false;
+          }
+        }).toList();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Entries for ${getMoodTranslation(context, mood)}'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: moodEntries.length,
+              itemBuilder: (context, index) {
+                final entry = moodEntries[index];
+                return ListTile(
+                  title: Text(
+                    DateFormat.yMMMd().format(DateTime.parse(entry.date)),
+                  ),
+                  subtitle: Text(entry.notes ?? ""),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Close'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final Map<Mood, int> moodCount = {};
@@ -135,7 +268,7 @@ class _MoodBoardWidgetState extends State<MoodBoardWidget> {
           return MoodWidget(
             quadrant: quadrant,
             label: label,
-            onTap: () {},
+            onTap: () => _showMoodEntries(context, mood),
             percentage: percentage,
           );
         }),
@@ -160,6 +293,8 @@ class MoodWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeNotifier = Provider.of<ThemeNotifier>(context);
+
     final opacity =
         percentage == null ? 0.1 : (percentage! * 5).clamp(0.1, 1.0);
 
@@ -187,7 +322,10 @@ class MoodWidget extends StatelessWidget {
             child: Text(
               label,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12, color: Colors.black),
+              style: TextStyle(
+                fontSize: 12,
+                color: themeNotifier.isDarkMode ? Colors.white : Colors.black,
+              ),
             ),
           ),
         ),

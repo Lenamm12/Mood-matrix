@@ -105,8 +105,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get version => 'Version';
 
   @override
-  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle =>
-      'Wenn Sie Ihre Daten auf allen Geräten speichern möchten, melden Sie sich bitte mit Google an';
+  String get ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle => 'Wenn Sie Ihre Daten auf allen Geräten speichern möchten, melden Sie sich bitte mit Google an';
 
   @override
   String get pink => 'Rosa';
@@ -122,6 +121,9 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get noEntries => 'Keine Einträge gefunden.';
+
+  @override
+  String get noMatchingEntries => 'Keine passenden Einträge gefunden.';
 
   @override
   String get highEnergyAndUnpleasant => 'Hohe Energie & Unangenehm';

@@ -1,6 +1,7 @@
 import '../notifier/theme_notifier.dart';
 import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
+import '../services/settings_service.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'language_selection_screen.dart';
@@ -14,63 +15,61 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+  final SettingsService _settingsService = SettingsService();
+
   Future<void> _signInWithGoogle() async {
     try {
       final userCredential = await AuthService().signInWithGoogle();
 
       if (userCredential != null) {
-        print("Signed in with Google!");
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Signed in with Google!")));
         await AuthService().synchronizeData(); // Synchronize data after sign-in
       }
     } catch (e) {
-      print(e); // Handle errors appropriately
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to sign in: $e")));
     }
   }
 
-  void rateApp() async {
-    final Uri url = Uri.parse(
+  Future<void> _launchUrl(String url) async {
+    final Uri uri = Uri.parse(url);
+    if (!await launchUrl(uri)) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Could not launch $url')));
+    }
+  }
+
+  void rateApp() {
+    _launchUrl(
       'https://play.google.com/store/apps/details?id=de.jelestudios.moodmatrix',
     );
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
   }
 
-  void contactUs() async {
-    final Uri url = Uri.parse('mailto:moodmatrix@jelestudios.de');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
+  void contactUs() {
+    _launchUrl('mailto:moodmatrix@jelestudios.de');
   }
 
-  void openPlayStore() async {
-    final Uri url = Uri.parse(
-      'https://play.google.com/store/apps/developer?id=jelestudios',
-    );
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
+  void openPlayStore() {
+    _launchUrl('https://play.google.com/store/apps/developer?id=jelestudios');
   }
 
-  void openWeb() async {
-    final Uri url = Uri.parse('https://jelestudios.de');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
+  void openWeb() {
+    _launchUrl('https://jelestudios.de');
   }
 
-  void termsOfService() async {
-    final Uri url = Uri.parse('https://moodmatrix.jelestudios.de/terms');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
+  void termsOfService() {
+    _launchUrl('https://moodmatrix.jelestudios.de/terms');
   }
 
-  void privacyPolicy() async {
-    final Uri url = Uri.parse('https://moodmatrix.jelestudios.de/privacy');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
+  void privacyPolicy() {
+    _launchUrl('https://moodmatrix.jelestudios.de/privacy');
   }
 
   @override
@@ -81,7 +80,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
       'Purple': Colors.purple[300]!,
       'Blue': Colors.blue,
       'Beige': Colors.brown[200]!,
-
     };
 
     return Scaffold(
@@ -94,20 +92,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 20),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const LanguageSelectionScreen(),
-                ),
-              );
-            },
-            child: Text(AppLocalizations.of(context)!.language),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const LanguageSelectionScreen(),
+                  ),
+                );
+              },
+              child: Text(AppLocalizations.of(context)!.language),
+            ),
           ),
           const SizedBox(height: 20),
           Text(
-              '${AppLocalizations.of(context)!.fontSize}: ${themeNotifier.fontSize.toStringAsFixed(1)}'),
+            '${AppLocalizations.of(context)!.fontSize}: ${themeNotifier.fontSize.toStringAsFixed(1)}',
+          ),
           Slider(
             value: themeNotifier.fontSize,
             min: 12.0,
@@ -116,6 +117,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
             label: themeNotifier.fontSize.round().toString(),
             onChanged: (double value) {
               themeNotifier.setFontSize(value);
+              _settingsService.saveThemeSettings(
+                themeNotifier.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+                themeNotifier.colorScheme,
+                value,
+              );
             },
           ),
           const SizedBox(height: 20),
@@ -130,7 +136,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   final isSelected = themeNotifier.colorScheme == colorName;
 
                   return GestureDetector(
-                    onTap: () => themeNotifier.setColorScheme(colorName),
+                    onTap: () {
+                      themeNotifier.setColorScheme(colorName);
+                      _settingsService.saveThemeSettings(
+                        themeNotifier.isDarkMode
+                            ? ThemeMode.dark
+                            : ThemeMode.light,
+                        colorName,
+                        themeNotifier.fontSize,
+                      );
+                    },
                     child: Container(
                       width: 40,
                       height: 40,
@@ -155,6 +170,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 value: themeNotifier.isDarkMode,
                 onChanged: (bool value) {
                   themeNotifier.setDarkMode(value);
+                  _settingsService.saveThemeSettings(
+                    themeNotifier.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+                    themeNotifier.colorScheme,
+                    themeNotifier.fontSize,
+                  );
                 },
                 thumbColor: WidgetStateProperty.all(
                   themeNotifier.isDarkMode ? Colors.white : Colors.black,
@@ -163,12 +183,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ],
           ),
           const SizedBox(height: 40),
-          Text(AppLocalizations.of(context)!.userData,
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            AppLocalizations.of(context)!.userData,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 20),
           Text(
-            AppLocalizations.of(context)!
-                .ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle,
+            AppLocalizations.of(
+              context,
+            )!.ifYouWantToSaveYourDataAcrossDevicesPleaseSignInWithGoogle,
           ),
           Center(
             child: ElevatedButton(
@@ -177,8 +200,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const SizedBox(height: 40),
-          Text(AppLocalizations.of(context)!.feedback,
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            AppLocalizations.of(context)!.feedback,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -187,14 +212,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Text(AppLocalizations.of(context)!.rateThisApp),
               ),
               TextButton(
-                  onPressed: contactUs,
-                  child: Text(AppLocalizations.of(context)!.contactUs)),
+                onPressed: contactUs,
+                child: Text(AppLocalizations.of(context)!.contactUs),
+              ),
             ],
           ),
-
           const SizedBox(height: 40),
-          Text(AppLocalizations.of(context)!.information,
-              style: Theme.of(context).textTheme.headlineSmall),
+          Text(
+            AppLocalizations.of(context)!.information,
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
           const SizedBox(height: 20),
           Row(
             children: [
@@ -203,11 +230,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 child: Text(AppLocalizations.of(context)!.otherApps),
               ),
               TextButton(
-                  onPressed: openWeb,
-                  child: Text(AppLocalizations.of(context)!.ourWebsite)),
+                onPressed: openWeb,
+                child: Text(AppLocalizations.of(context)!.ourWebsite),
+              ),
             ],
           ),
-
           const SizedBox(height: 20),
           Row(
             children: [
@@ -221,7 +248,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
             ],
           ),
-
           Text('${AppLocalizations.of(context)!.version}: 1.0.0'),
         ],
       ),

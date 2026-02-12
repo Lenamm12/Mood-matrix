@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
     return Consumer2<ThemeNotifier, LocaleNotifier>(
       builder: (context, theme, locale, child) {
         return MaterialApp(
-          title: 'Mood matrix',
+          title: 'Mood Matrix',
           theme: theme.currentTheme,
           locale: locale.locale,
           localizationsDelegates: const [
@@ -86,19 +86,21 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final themeNotifier = Provider.of<ThemeNotifier>(context);
     return Scaffold(
-      body:  IndexedStack(index: _selectedIndex, children: _screens),
+      body: IndexedStack(index: _selectedIndex, children: _screens),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: const Icon(Icons.history),
-              label: AppLocalizations.of(context)!.history),
+            icon: const Icon(Icons.history),
+            label: AppLocalizations.of(context)!.history,
+          ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.auto_graph),
             label: AppLocalizations.of(context)!.graphs,
           ),
           BottomNavigationBarItem(
-              icon: const Icon(Icons.add),
-              label: AppLocalizations.of(context)!.addMood),
+            icon: const Icon(Icons.add),
+            label: AppLocalizations.of(context)!.addMood,
+          ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.calendar_month),
             label: AppLocalizations.of(context)!.calendar,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mood_matrix/l10n/app_localizations.dart';
 import 'package:mood_matrix/notifier/locale_notifier.dart';
+import 'package:mood_matrix/services/settings_service.dart';
 import 'package:provider/provider.dart';
 
 class LanguageSelectionScreen extends StatelessWidget {
@@ -8,6 +9,8 @@ class LanguageSelectionScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final settingsService = SettingsService();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.selectLanguage),
@@ -19,6 +22,7 @@ class LanguageSelectionScreen extends StatelessWidget {
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('en', ''));
+              settingsService.saveLanguage('en');
             },
           ),
           ListTile(
@@ -26,6 +30,7 @@ class LanguageSelectionScreen extends StatelessWidget {
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('de', ''));
+              settingsService.saveLanguage('de');
             },
           ),
           ListTile(
@@ -33,6 +38,7 @@ class LanguageSelectionScreen extends StatelessWidget {
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('fr', ''));
+              settingsService.saveLanguage('fr');
             },
           ),
           ListTile(
@@ -40,6 +46,7 @@ class LanguageSelectionScreen extends StatelessWidget {
             onTap: () {
               Provider.of<LocaleNotifier>(context, listen: false)
                   .setLocale(const Locale('es', ''));
+              settingsService.saveLanguage('es');
             },
           ),
         ],
