@@ -96,10 +96,11 @@ class _HeatmapWidgetState extends State<HeatmapWidget> {
         final DateTime startDate;
         switch (_timeframe) {
           case HeatmapTime.WEEK:
-            startDate = _endDate.subtract(const Duration(days: 7));
+            int daysToSubtract = _endDate.weekday - 1;
+            startDate = _endDate.subtract(Duration(days: daysToSubtract));
             break;
           case HeatmapTime.MONTH:
-            startDate = _addMonths(_endDate, -1);
+            startDate = DateTime(_endDate.year, _endDate.month, 1);
             break;
           case HeatmapTime.YEAR:
             startDate = DateTime(
@@ -164,6 +165,8 @@ class _HeatmapWidgetState extends State<HeatmapWidget> {
                 Text(
                   _timeframe == HeatmapTime.YEAR
                       ? DateFormat.y().format(_endDate)
+                      : _timeframe == HeatmapTime.MONTH
+                      ? DateFormat.yMMMM().format(_endDate)
                       : '${DateFormat.yMd().format(startDate)} - ${DateFormat.yMd().format(_endDate)}',
                 ),
                 IconButton(
