@@ -67,6 +67,13 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
+  flutter_launcher_icons: "^0.13.0"
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/icon/moodmatrix.png"
+
 # The following section is specific to Flutter packages.
 flutter:
   generate: true
